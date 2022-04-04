@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+          #title{
+               text-align: center;
+            }
+           #form {
+               width : 380px;
+               margin : auto;
+               font-size : 20px;
+               font-family : sans-serif;
+               background: #2F4F4F;
+               border-radius: 15px;
+               padding : 30px 0px;
+               
+           }
+
+           #form > div {
+               color : rgb(245,245,220);
+              margin-top : 20px;
+              margin-left : 20px;
+           }
+
+           #form > input , #form > select{
+                margin-left : 20px;
+                width : 88%;
+                height : 30px;
+                font-size : 16px;
+                border-radius : 10px;
+            }
+
+             #form > select {
+                 width : 90%;
+             }
+            
+            #form > #submit{
+                display : block;
+                  margin-top : 30px;
+                 border : none;
+                 width : 90%;
+                 background-color : green;
+            }
+             #form > #submit:hover{
+                 background: lightpink;
+                 height : 40px;
+                 font-size : 20px;
+                 cursor : pointer;
+             }
+               
+            
+        #container{
+            display : grid;
+            grid-template-columns: repeat(4 , 1fr);
+            gap : 20px;
+            margin : 40px 20px;
+
+        }
+         #container > div {
+             border : 1px solid red;
+             text-align : center;
+             box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+             font-size : 18px;
+             font-family : sans-serif;
+            background: rgb(192,192,192);
+         }
+          #container > div > p:nth-child(1){
+              color : teal
+          }
+          #container > div > p:nth-child(2){
+              color :  red;
+          }
+
+          #container > div > p:nth-child(3){
+              color : red;
+          }
+
+          #container > div > p:nth-child(4){
+              color : green;
+          } 
+          @media all and (min-width : 450px) and (max-width : 850px){
+            #form {
+                width : 80%
+            }
+            #container{ 
+            grid-template-columns: repeat(3 , 1fr);
+            }
+          }
+
+          @media all and (min-width : 60px) and (max-width : 451px){
+            #form {
+                width : 100%
+            }
+            #container{ 
+            grid-template-columns: repeat(2 , 1fr);
+            }
+          }
+
+    </style>
+</head>
+<body>
+    <h1 id = "title">Expense Tracker</h1>
+    <form id = "form">
+           <div>Select Month</div>
+           <select id = "month">
+                 <option value="January">January</option>
+                 <option value="February">February</option>
+                 <option value="March">March</option>
+                 <option value="April">April</option>
+                 <option value="May">May</option>
+                 <option value="June">June</option>
+                 <option value="July">July</option>
+                 <option value="August">August</option>
+                 <option value="September">September</option>
+                 <option value="October">October</option>
+                 <option value="November">November</option>
+                 <option value="December">December</option>
+           </select>
+           <div>Income</div>
+           <input type = "number" placeholder = "Enter Income"  id = "income"/>
+           <div>Expense</div>
+           <input type = "number" placeholder = "Enter Expense" id = "expense"/>
+           <input type = "submit" id = "submit"/>
+    </form>
+      <div id = "container"></div>
+</body>
+
+    <script>
+           
+           if(JSON.parse(localStorage.getItem("expenseArr") === null)){
+               localStorage.setItem("expenseArr", JSON.stringify([]));
+           }else {
+               displayItems();
+           }
+
+        document.querySelector("form").addEventListener("submit", addItem);
+
+        function addItem(e){
+            e.preventDefault();
+            var month = document.getElementById("month");
+            var income = document.getElementById("income");
+            var expense = document.getElementById("expense");
+
+            var expenseArr = JSON.parse(localStorage.getItem("expenseArr"));
+
+            var expenseObj = {
+                month : month.value,
+                income : income.value,
+                expense : expense.value,
+
+            }
+
+             expenseArr.push(expenseObj);
+
+            localStorage.setItem("expenseArr", JSON.stringify(expenseArr));
+
+            displayItems();
+        }
+
+           function displayItems() {
+
+            document.getElementById("container").innerText = "";
+              var expenseArr = JSON.parse(localStorage.getItem("expenseArr"));
+
+              expenseArr.forEach(function(item){
+
+                var itemBox = document.createElement("div");
+                  var monthPara = document.createElement("p");
+                    monthPara.innerText = item.month;
+                  var incomePara = document.createElement("p");
+                     incomePara.innerText = `Your income is Rs. ${item.income}`;
+                  var expensePara = document.createElement("p"); 
+                      expensePara.innerText = `Your expense is Rs. ${item.expense}`;
+                    var savingPara = document.createElement("p");
+                       savingPara.innerText = `Your expense is Rs. ${item.income - item.expense}`;
+
+                  itemBox.append(monthPara , incomePara , expensePara , savingPara , );
+
+                  document.getElementById("container").append(itemBox);
+
+              })
+           }
+
+
+           
+    </script>
+</html>
